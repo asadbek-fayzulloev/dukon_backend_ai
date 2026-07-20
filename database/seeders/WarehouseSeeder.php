@@ -1,0 +1,23 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Shop;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use App\Models\Warehouse;
+class WarehouseSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        Warehouse::query()->create(
+            [
+                'name' => 'Main Warehouse',
+                'shop_id' => Shop::first()->id,
+            ]
+        );
+    }
+}
