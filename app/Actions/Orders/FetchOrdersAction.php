@@ -13,6 +13,7 @@ class FetchOrdersAction
     public function handle(FetchOrderRequest $request): array
     {
         $query = Order::query()
+                    ->where('shop_id', user()->shop_id)
                     ->with(['user', 'seller'])
                     ->orderByDesc('created_at');
         $query = (new OrderFilter($query))->apply();

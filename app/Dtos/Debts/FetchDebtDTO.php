@@ -11,7 +11,8 @@ use Spatie\LaravelData\Data;
 class FetchDebtDTO extends Data
 {
     public int $id;
-    public float $amount;
+    public int $amount;
+    public int $remaining_amount;
     #[LoadRelation]
     public ?User $user;
     #[LoadRelation]
@@ -27,6 +28,8 @@ class FetchDebtDTO extends Data
             'user_name' => $this->user?->name,
             'user_phone' => $this->user?->phone,
             'amount' => $this->amount,
+            'remaining_amount' => $this->remaining_amount,
+            'status' => $this->status,
             'return_date' => $this->return_date,
         ];
     }

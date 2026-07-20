@@ -23,6 +23,7 @@ return new class extends Migration
 
         DB::table('debts')->update([
             'remaining_amount' => DB::raw('amount'),
+            'status' => 'open',
         ]);
 
         Schema::table('debts', function (Blueprint $table) {

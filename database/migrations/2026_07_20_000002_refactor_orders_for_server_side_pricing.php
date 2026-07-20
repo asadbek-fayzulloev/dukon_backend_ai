@@ -27,6 +27,7 @@ return new class extends Migration
             $table->timestamp('sold_at')->nullable()->after('status');
             $table->timestamp('synced_at')->nullable()->after('sold_at');
 
+            $table->integer('user_id')->nullable()->default(null)->change();
             $table->unsignedBigInteger('order_total_price')->default(0)->change();
             $table->unsignedBigInteger('order_total_paid')->default(0)->change();
         });
@@ -93,6 +94,7 @@ return new class extends Migration
 
             $table->integer('order_total_price')->change();
             $table->float('order_total_paid')->nullable()->change();
+            $table->integer('user_id')->nullable(false)->default(1)->change();
         });
     }
 };

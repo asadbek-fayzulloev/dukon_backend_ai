@@ -13,6 +13,8 @@ class FetchDebtAction
     {
         $query = Debt::query()
             ->whereHas('user')
+            ->whereHas('order', fn ($query) => $query->where('shop_id', user()->shop_id))
+            ->with(['user', 'order'])
             ->orderByDesc('created_at');
         $paginator = $query->paginate(perPage: $request->per_page, page: $request->page);
         $debts = array_map(

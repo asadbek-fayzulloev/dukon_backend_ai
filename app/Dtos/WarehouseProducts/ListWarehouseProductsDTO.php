@@ -9,25 +9,24 @@ use Spatie\LaravelData\Data;
 
 class ListWarehouseProductsDTO extends Data
 {
-    public int $id;
     #[LoadRelation]
     public ?Product $product;
     public int $product_id;
     public int $warehouse_id;
-    public int $quantity;
-    public float $net_price;
-    public float $price;
+    public float $quantity;
+    public int $price;
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->product_id,
+            'product_id' => $this->product_id,
             'name' => $this->product?->name,
+            'barcode' => $this->product?->code,
             'warehouse_id' => $this->warehouse_id,
-            'net_price' => $this->net_price,
             'price' => $this->price,
             'quantity' => $this->quantity,
-            'unit_name' => $this->product->unit?->name,
+            'unit_name' => $this->product?->unit?->name,
         ];
     }
 }

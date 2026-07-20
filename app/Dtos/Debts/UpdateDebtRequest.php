@@ -9,5 +9,4 @@ class UpdateDebtRequest extends Data
 {
     #[Rule('date_format:Y-m-d H:i:s')]
     public string $return_date;
-    public float $amount;
 }
