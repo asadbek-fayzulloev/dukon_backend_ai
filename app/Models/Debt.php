@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property float $amount
@@ -15,9 +16,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Debt extends Model
 {
-    protected $fillable = ['amount', 'return_date', 'status', 'order_id', 'is_notified', 'user_id'];
+    protected $fillable = [
+        'amount', 'remaining_amount', 'return_date', 'paid_at', 'status',
+        'order_id', 'is_notified', 'user_id',
+    ];
     protected $casts = [
-        'return_date' => 'datetime'
+        'return_date' => 'datetime',
+        'paid_at' => 'datetime',
+        'is_notified' => 'boolean',
     ];
 
     public function user(): BelongsTo
@@ -28,5 +34,10 @@ class Debt extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(DebtPayment::class);
     }
 }

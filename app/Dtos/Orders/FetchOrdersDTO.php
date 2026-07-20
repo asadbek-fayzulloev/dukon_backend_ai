@@ -16,7 +16,7 @@ class FetchOrdersDTO extends Data
     public Admin $seller;
     #[LoadRelation]
     public ?User $user;
-    public float $order_total_price;
+    public int $order_total_price;
     #[Rule('date_format:Y-m-d H:i:s')]
     public DateTime $created_at;
 

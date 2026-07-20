@@ -24,6 +24,11 @@ class WarehouseProductFilter extends BaseQueryFilter
                 ->orWhere('code', '=', $value);
         });
     }
+
+    public function name($value)
+    {
+        return $this->search($value);
+    }
     public function category_id($value)
     {
         if ($value === null) {

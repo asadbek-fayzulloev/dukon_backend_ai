@@ -2,11 +2,13 @@
 
 namespace App\Dtos\WarehouseProducts;
 
+use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Data;
 
 class ListWarehouseProductsRequest extends Data
 {
-    public ?int $warehouseId;
+    #[Exists('warehouses', 'id')]
+    public ?int $warehouse_id;
     public ?string $code;
     public ?string $name;
     public ?int $category_id;

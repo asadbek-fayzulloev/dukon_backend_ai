@@ -2,18 +2,31 @@
 
 namespace App\Dtos\Warehouses\Products;
 
+use App\Models\Product;
+use Spatie\LaravelData\Attributes\LoadRelation;
 use Spatie\LaravelData\Data;
 
 class FetchWarehouseProductsDTO extends Data
 {
-    public int $id;
-    public string $name;
+    public int $product_id;
+    public int $warehouse_id;
+    public float $quantity;
+    public int $price;
+
+    #[LoadRelation]
+    public ?Product $product;
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'name'=> $this->name,
+            'id' => $this->product_id,
+            'product_id' => $this->product_id,
+            'name' => $this->product?->name,
+            'barcode' => $this->product?->code,
+            'warehouse_id' => $this->warehouse_id,
+            'quantity' => $this->quantity,
+            'price' => $this->price,
+            'unit_name' => $this->product?->unit?->name,
         ];
     }
 }

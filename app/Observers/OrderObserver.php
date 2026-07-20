@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Enums\OrderStatus;
+use App\Enums\DebtStatus;
 use App\Models\Debt;
 use App\Models\Order;
 
@@ -19,7 +19,8 @@ class OrderObserver
         if ($order->order_total_price > $order->order_total_paid && $order->user_id) {
             $debt = new Debt();
             $debt->amount = ($order->order_total_price - $order->order_total_paid);
-            $debt->status = OrderStatus::CREATED;
+            $debt->remaining_amount = $debt->amount;
+            $debt->status = DebtStatus::OPEN->value;
             $debt->order_id = $order->id;
             $debt->user_id = $order->user_id;
             $debt->return_date = $order->debt_return_date;

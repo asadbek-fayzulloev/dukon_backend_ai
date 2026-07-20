@@ -12,7 +12,7 @@ class FetchOrderItemsDTO extends Data
     #[LoadRelation]
     public Product $product;
     public float $quantity;
-    public float $product_price;
+    public int $product_price;
     public ?int $discount;
 
     public function toArray(): array

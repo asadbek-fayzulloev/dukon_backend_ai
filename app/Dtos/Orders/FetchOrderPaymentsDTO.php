@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 class FetchOrderPaymentsDTO extends Data
 {
     public string $payment_type;
-    public float $payed_price;
+    public int $payed_price;
 
     public function toArray(): array
     {
