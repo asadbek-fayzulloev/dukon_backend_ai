@@ -8,6 +8,7 @@ use App\Actions\Statistics\SellerStatAction;
 use App\Dtos\Statistics\SalesStatRequest;
 use App\Dtos\Statistics\SellerStatRequest;
 use App\Http\Controllers\ApiBaseController;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
 class StatisticsController extends ApiBaseController
@@ -25,5 +26,14 @@ class StatisticsController extends ApiBaseController
     public function salesStat(Request $request, SalesStatAction $action): array
     {
         return $action->handle(SalesStatRequest::from($request));
+    }
+    public function other(){
+        return [
+            'widgets' => [
+                'warehouses' => Warehouse::query()->withCount('products')->get()->pluck('name', 'productsCount')->toArray(),
+                'shops' => [],
+
+            ]
+        ];
     }
 }

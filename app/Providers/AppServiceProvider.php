@@ -44,7 +44,10 @@ class AppServiceProvider extends ServiceProvider
             $file = end($bt)['file'] ?? null;
 
             if (!blank($file) && file_exists($file)) {
-                $dir = str_replace(base_path('routes/api/'), '', dirname($file));
+                // Normalize both sides to forward slashes before diffing
+                $normalizedFile = str_replace('\\', '/', dirname($file));
+                $normalizedBase = str_replace('\\', '/', base_path('routes/api'));
+                $dir = trim(str_replace($normalizedBase, '', $normalizedFile), '/');
 
                 if (is_null($callback)) {
                     $callback = base_path("routes/api/{$dir}/{$name}.php");

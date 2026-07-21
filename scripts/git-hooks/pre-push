@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# Git pre-push hook — runs the Laravel test suite before allowing a push.
+# If the tests fail, git aborts the push automatically (non-zero exit code).
+#
+# Installed automatically by `composer install` / `composer update` via
+# scripts/install-git-hooks.php, or you can copy it manually — see
+# scripts/install-git-hooks.php for details.
+#
+# Skip once (not recommended as a habit): git push --no-verify
+
+echo "Running Laravel test suite before push..."
+echo ""
+
+php artisan test
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo ""
+    echo "Tests failed - push aborted."
+    echo "Fix the failing tests, or run 'git push --no-verify' to skip this check."
+    exit 1
+fi
+
+echo ""
+echo "Tests passed - continuing push."
+exit 0

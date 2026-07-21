@@ -4,14 +4,13 @@
 use App\Http\Controllers\V1\ProductController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('list', [ProductController::class, 'list']);
-Route::get('/', [ProductController::class, 'index']);
-Route::get('low-stock-export', [ProductController::class, 'exportLowStock']);
+Route::get('list', [ProductController::class, 'list'])->name('list');
+Route::get('/', [ProductController::class, 'index'])->name('index');;
+Route::get('low-stock-export', [ProductController::class, 'exportLowStock'])->name('low-stock.export');
 
-Route::get('{product}', [ProductController::class, 'show']);
+Route::get('{product}', [ProductController::class, 'show'])->name('show');
+Route::post('/', [ProductController::class, 'store'])->name('store');
+Route::put('{product}', [ProductController::class, 'update'])->name('update');
 
-Route::post('/', [ProductController::class, 'store']);
-Route::put('{product}', [ProductController::class, 'update']);
-
-Route::delete('delete-all', [ProductController::class, 'destroyAll']);
-Route::delete('{product}', [ProductController::class, 'destroy']);
+Route::delete('delete-all', [ProductController::class, 'destroyAll'])->name('destroyAll');
+Route::delete('{product}', [ProductController::class, 'destroy'])->name('destroy');

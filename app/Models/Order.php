@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Order extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'uuid', 'user_id', 'seller_id', 'shop_id', 'warehouse_id', 'device_id',
         'subtotal', 'discount_type', 'discount_value', 'discount_amount', 'discount',

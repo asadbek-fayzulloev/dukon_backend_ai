@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use DateTime;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Debt extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'amount', 'remaining_amount', 'return_date', 'paid_at', 'status',
         'order_id', 'is_notified', 'user_id',
