@@ -2,6 +2,7 @@
 
 namespace App\Actions\Statistics;
 
+use App\Models\Debt;
 use App\Models\OrderPayment;
 use App\Models\WarehouseProduct;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class GetStatWidgetAction
             $orderPaymentsQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
         $money_in_kassa = $orderPaymentsQuery->sum('payed_price');
+        $debt_summ = Debt::query()->sum('remaining_amount');
         $all_neat_price = WarehouseProduct::query()->selectRaw('SUM(net_price * quantity) as total')->value('total');
         $all_sale_price = WarehouseProduct::query()->selectRaw('SUM(price * quantity) as totalp')->value('totalp');
         return [
@@ -33,6 +35,10 @@ class GetStatWidgetAction
                 [
                     'name' => 'Kassadagi pul',
                     'value' => number_format($money_in_kassa) . ' UZS',
+                ],
+                [
+                    'name' => 'Qarzdorlik',
+                    'value' => number_format($debt_summ) . ' UZS',
                 ],
             ]
         ];
