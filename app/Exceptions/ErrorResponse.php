@@ -6,7 +6,7 @@ use Exception;
 
 class ErrorResponse extends Exception
 {
-    private int $statusCode = 200;
+    private int $statusCode = 400;
 
     public function getStatusCode(): int
     {
