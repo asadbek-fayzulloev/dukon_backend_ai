@@ -17,5 +17,6 @@ Route::middleware(['auth:api'])->group(static function () {
     Route::module('settings');
     Route::module('warehouses');
     Route::module('warehouse-products');
+    Route::module('static-data');
 
 });

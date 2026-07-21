@@ -14,4 +14,12 @@ enum OrderStatus: string
             self::DEBT->value,
         ];
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::COMPLETED => 'Yakunlangan',
+            self::DEBT => 'Qarz',
+        };
+    }
 }

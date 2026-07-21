@@ -12,7 +12,7 @@ class SellerStatAction
     public function handle(SellerStatRequest $request): array
     {
         $fromDate = $request->from_date ? Carbon::parse($request->from_date)->startOfDay() : Carbon::today()->subDays(30);
-        $toDate = $request->end_date ? Carbon::parse($request->end_date)->endOfDay() : Carbon::now();
+        $toDate = $request->to_date ? Carbon::parse($request->to_date)->endOfDay() : Carbon::now();
 
         return [
             'seller_stats' => Order::with('seller:id,name')
