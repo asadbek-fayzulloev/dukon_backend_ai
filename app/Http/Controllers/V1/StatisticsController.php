@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\V1;
 
 use App\Actions\Statistics\GetStatWidgetAction;
+use App\Actions\Statistics\PaymentStatAction;
 use App\Actions\Statistics\SalesStatAction;
 use App\Actions\Statistics\SellerStatAction;
+use App\Dtos\Statistics\PaymentStatRequest;
 use App\Dtos\Statistics\SalesStatRequest;
 use App\Dtos\Statistics\SellerStatRequest;
 use App\Http\Controllers\ApiBaseController;
@@ -26,6 +28,11 @@ class StatisticsController extends ApiBaseController
     public function salesStat(Request $request, SalesStatAction $action): array
     {
         return $action->handle(SalesStatRequest::from($request));
+    }
+
+    public function paymentStat(Request $request, PaymentStatAction $action): array
+    {
+        return $action->handle(PaymentStatRequest::from($request));
     }
     public function other(){
         return [

@@ -5,7 +5,7 @@ namespace App\Dtos\Statistics;
 use Spatie\LaravelData\Attributes\Validation\Rule;
 use Spatie\LaravelData\Data;
 
-class SellerStatRequest extends Data
+class PaymentStatRequest extends Data
 {
     #[Rule('date_format:Y-m-d')]
     public ?string $from_date;
