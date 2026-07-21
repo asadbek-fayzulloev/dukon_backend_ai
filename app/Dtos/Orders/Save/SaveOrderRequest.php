@@ -16,7 +16,7 @@ class SaveOrderRequest extends Data
     #[Rule(['required', 'array', 'min:1'])]
     public DataCollection $items;
     #[DataCollectionOf(SaveOrderPaymentRequest::class)]
-    #[Rule(['present', 'array', 'max:2'])]
+    #[Rule(['present', 'array', 'max:3'])]
     public DataCollection $payments;
     #[Rule(['nullable', 'uuid'])]
     public ?string $uuid;

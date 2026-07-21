@@ -9,7 +9,9 @@ use App\Dtos\Units\SaveUnitRequest;
 use App\Actions\Units\UpdateUnitAction;
 use App\Dtos\Units\UpdateUnitRequest;
 use App\Actions\Units\DestroyUnitAction;
-class UnitController
+use App\Http\Controllers\ApiBaseController;
+
+class UnitController extends ApiBaseController
 {
     public function index(FetchUnitAction $action): array
     {
