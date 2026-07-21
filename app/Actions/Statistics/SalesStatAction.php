@@ -25,7 +25,12 @@ class SalesStatAction
             ->get();
 
         return [
-            'sales_stats' => $sales
+            // Postgres returns SUM() aggregates as numeric strings via PDO;
+            // cast explicitly so the API always emits a JSON number.
+            'sales_stats' => $sales->map(fn ($row): array => [
+                'date' => (string) $row->date,
+                'total_sales' => (int) $row->total_sales,
+            ])->values(),
         ];
     }
 }
