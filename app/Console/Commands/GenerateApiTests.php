@@ -50,7 +50,8 @@ class GenerateApiTests extends Command
     protected $signature = 'tests:generate-api
         {--prefix= : Only include routes whose URI starts with this prefix, e.g. api}
         {--output=tests/Feature/Api : Directory to write generated test classes into}
-        {--force : Overwrite existing test files instead of skipping them}';
+        {--force : Overwrite existing test files instead of skipping them}
+        {--status=200 : Default expected HTTP status for generated assertStatus() calls}';
 
     protected $description = 'Generate PHPUnit feature test scaffolds from registered API routes, grouped and named to match postman:generate';
 
@@ -237,11 +238,7 @@ PHP;
         $callMethod = $callMethodMap[$httpMethod] ?? 'json';
 
         $body = $this->extractRequestBody($route, $method);
-        $expectedStatus = match (true) {
-            $httpMethod === 'post' => 200,
-            $httpMethod === 'delete' => 200,
-            default => 200,
-        };
+        $expectedStatus = (int) $this->option('status');
 
         $lines = [];
         $lines[] = "    public function {$methodName}(): void";
@@ -255,7 +252,9 @@ PHP;
 
             if ($modelClass) {
                 $lines[] = '';
-                $lines[] = "        \$model = \\{$modelClass}::factory()->create();";
+                foreach ($this->buildInlineModelCreateLines($modelClass) as $line) {
+                    $lines[] = $line;
+                }
 
                 // Build the call URL as a concatenated expression using the
                 // freshly created model's real id, e.g.
@@ -266,7 +265,7 @@ PHP;
             } else {
                 $lines[] = '';
                 $lines[] = '        // TODO: could not auto-detect the Eloquent model for this resource —';
-                $lines[] = '        // seed one manually (e.g. $model = Order::factory()->create();) and use its id below';
+                $lines[] = '        // seed one manually (e.g. $model = Order::create([...]);) and use its id below';
             }
         }
 
@@ -401,6 +400,35 @@ PHP;
         $guessClass = 'App\\Models\\' . Str::studly(Str::singular($resourceSegment));
 
         return class_exists($guessClass) ? $guessClass : null;
+    }
+
+    /**
+     * If {ModelBasename}Factory doesn't exist yet, generate one from the
+     * model's actual table columns via Schema, so SHOW/UPDATE/DELETE tests
+     * that call Model::factory()->create() don't blow up on a missing class.
+     * Runs at most once per model per command invocation.
+     */
+    /**
+     * Build the lines for creating a real record directly inside the test
+     * (no separate factory file): $model = \App\Models\X::forceCreate([...]).
+     * Column names/values are pulled from the actual table schema via
+     * Schema, so the record satisfies NOT NULL columns and the route's
+     * lookup actually finds it instead of 404ing.
+     */
+    protected function buildInlineModelCreateLines(string $modelClass): array
+    {
+        $shortName = class_basename($modelClass);
+        $factoryClass = "Database\\Factories\\{$shortName}Factory";
+
+        if (class_exists($factoryClass)) {
+            return ["        \$model = \\{$modelClass}::factory()->create();"];
+        }
+
+        return [
+            "        // TODO: {$factoryClass} doesn't exist yet — create it (php artisan make:factory {$shortName}Factory)",
+            "        // then use: \$model = \\{$modelClass}::factory()->create();",
+            "        \$model = \\{$modelClass}::factory()->create(); // will fail until the factory above exists",
+        ];
     }
 
     /**
