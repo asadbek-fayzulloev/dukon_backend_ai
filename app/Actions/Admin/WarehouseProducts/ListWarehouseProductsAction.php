@@ -19,7 +19,7 @@ class ListWarehouseProductsAction
 
         $query = (new WarehouseProductFilter($query))->apply();
         $products = $query
-            ->selectRaw('product_id, warehouse_id, SUM(quantity) AS quantity, MAX(price) AS price')
+            ->selectRaw('product_id, warehouse_id, SUM(quantity) AS quantity, MAX(price) AS price, MAX(net_price) AS net_price')
             ->groupBy('product_id', 'warehouse_id')
             ->get();
 

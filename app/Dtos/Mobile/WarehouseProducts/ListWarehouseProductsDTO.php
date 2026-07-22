@@ -15,6 +15,7 @@ class ListWarehouseProductsDTO extends Data
     public int $warehouse_id;
     public float $quantity;
     public int $price;
+    public ?float $net_price;
 
     public function toArray(): array
     {
@@ -25,8 +26,10 @@ class ListWarehouseProductsDTO extends Data
             'barcode' => $this->product?->code,
             'warehouse_id' => $this->warehouse_id,
             'price' => $this->price,
+            'net_price' => $this->net_price ?? 0,
             'quantity' => $this->quantity,
             'unit_name' => $this->product?->unit?->name,
+            'notify_limit' => $this->product?->notify_limit ?? 0,
         ];
     }
 }
