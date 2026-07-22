@@ -11,10 +11,11 @@ class LoginAction
 {
     public function handle(LoginRequest $request): array
     {
-        $user = Admin::query()->where(['email' => $request->username])->first();
+        $user = Admin::query()->with('company')->where(['email' => $request->username])->first();
 
         error_if($user === null, __('auth.incorrect_credential'));
         error_unless(Hash::check($request->password, $user->password), __('auth.incorrect_credential'));
+        error_if($user->company !== null && !$user->company->is_active, __('auth.company_inactive'));
         return [
             'token' => [
                 'access_token' => $user->createToken(

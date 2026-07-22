@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\V1;
 use App\Actions\Admin\Companies\DestroyCompanyAction;
 use App\Actions\Admin\Companies\FetchCompaniesAction;
 use App\Actions\Admin\Companies\SaveCompanyAction;
+use App\Actions\Admin\Companies\SetCompanyActiveAction;
 use App\Actions\Admin\Companies\UpdateCompanyAction;
 use App\Dtos\Admin\Companies\SaveCompanyRequest;
 use App\Dtos\Admin\Companies\UpdateCompanyRequest;
@@ -31,5 +32,15 @@ class CompanyController extends ApiBaseController
     public function destroy(int $id, DestroyCompanyAction $action): string
     {
         return $action->handle($id);
+    }
+
+    public function activate(int $id, SetCompanyActiveAction $action): string
+    {
+        return $action->handle($id, true);
+    }
+
+    public function deactivate(int $id, SetCompanyActiveAction $action): string
+    {
+        return $action->handle($id, false);
     }
 }
