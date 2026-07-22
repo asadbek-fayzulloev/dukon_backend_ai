@@ -3,13 +3,14 @@
 namespace App\Exports;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
 class LessProductsExport implements FromQuery, WithHeadingRow, WithMapping
 {
-    public function __construct()
+    public function __construct(private readonly ?int $companyId = null)
     {
     }
 
@@ -24,8 +25,19 @@ class LessProductsExport implements FromQuery, WithHeadingRow, WithMapping
 
     public function query()
     {
-        return Product::query()->whereColumn('quantity', '<=', 'notify_limit');
-
+        // products.quantity moved to warehouse_products (per-warehouse batches),
+        // so "low stock" compares the aggregated stock across warehouses.
+        return Product::query()
+            ->when($this->companyId, fn ($query, $companyId) => $query->where('company_id', $companyId))
+            ->selectSub(
+                DB::table('warehouse_products')
+                    ->selectRaw('COALESCE(SUM(quantity), 0)')
+                    ->whereColumn('warehouse_products.product_id', 'products.id'),
+                'total_quantity'
+            )
+            ->whereRaw(
+                '(SELECT COALESCE(SUM(quantity), 0) FROM warehouse_products WHERE warehouse_products.product_id = products.id) <= notify_limit'
+            );
     }
 
 
@@ -33,6 +45,8 @@ class LessProductsExport implements FromQuery, WithHeadingRow, WithMapping
     {
         return [
             $row->id,
-            $row->name, $row->quantity];
+            $row->name,
+            $row->total_quantity,
+        ];
     }
 }

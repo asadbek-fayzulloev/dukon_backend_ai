@@ -29,9 +29,13 @@ class GetStatWidgetAction
             ->where('company_id', user()->company_id)
             ->whereDate('created_at', Carbon::today())
             ->count();
+        // products.quantity moved to warehouse_products (per-warehouse batches),
+        // so "low stock" compares the aggregated stock across warehouses.
         $low_stock_count = Product::query()
             ->where('company_id', user()->company_id)
-            ->whereColumn('quantity', '<=', 'notify_limit')
+            ->whereRaw(
+                '(SELECT COALESCE(SUM(quantity), 0) FROM warehouse_products WHERE warehouse_products.product_id = products.id) <= notify_limit'
+            )
             ->count();
         return [
             'widgets' => [

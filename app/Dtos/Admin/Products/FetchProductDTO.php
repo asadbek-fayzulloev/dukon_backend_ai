@@ -10,9 +10,6 @@ class FetchProductDTO extends Data
 {
     public int $id;
     public string $name;
-    public float $price;
-    public float $net_price;
-    public float $quantity;
     public ?float $notify_limit;
     #[LoadRelation]
     public ?Unit $unit;

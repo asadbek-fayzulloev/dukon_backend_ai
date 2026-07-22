@@ -10,6 +10,6 @@ class LessExportProductAction
 {
     public function handle(): BinaryFileResponse
     {
-        return Excel::download(new LessProductsExport(), 'kam_qolgan_tovarlar.xlsx');
+        return Excel::download(new LessProductsExport(user()->company_id), 'kam_qolgan_tovarlar.xlsx');
     }
 }

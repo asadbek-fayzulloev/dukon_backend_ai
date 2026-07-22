@@ -7,7 +7,11 @@ class ProductFilter extends BaseQueryFilter
     public function low_stock($value)
     {
         if ($value) {
-            return $this->builder->whereColumn('quantity', '<=', 'notify_limit');
+            // products.quantity moved to warehouse_products (per-warehouse batches),
+            // so "low stock" now compares the aggregated stock across warehouses.
+            return $this->builder->whereRaw(
+                '(SELECT COALESCE(SUM(quantity), 0) FROM warehouse_products WHERE warehouse_products.product_id = products.id) <= notify_limit'
+            );
         }
         return $this->builder;
     }
