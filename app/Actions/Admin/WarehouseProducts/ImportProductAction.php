@@ -87,7 +87,9 @@ class ImportProductAction
             // Har bir kirim uchun bitta nakladnoy (invoice) va uning ortidan
             // qator-baqator tarixiy yozuvlar — warehouse_products faqat joriy
             // yig'indini saqlaydi, "kirim tarixi" shu jadval orqali ko'rsatiladi.
-            $totalAmount = collect($request->products)->sum(fn($p) => $p->quantity * $p->price);
+            $productsArray = iterator_to_array($request->products);
+
+            $totalAmount = array_sum(array_map(fn($p) => $p->quantity * $p->price, $productsArray));
 
             $invoice = Invoice::create([
                 'type' => MovementType::BUY->value,
@@ -96,7 +98,7 @@ class ImportProductAction
                 'total_amount' => $totalAmount,
             ]);
 
-            $movementRows = collect($request->products)->map(fn($p) => [
+            $movementRows = array_map(fn($p) => [
                 'invoice_id'   => $invoice->id,
                 'product_id'   => $p->id,
                 'warehouse_id' => $warehouseId,
@@ -107,7 +109,7 @@ class ImportProductAction
                 'price'        => $p->price,
                 'created_at'   => now(),
                 'updated_at'   => now(),
-            ])->all();
+            ], $productsArray);
 
             DB::table('warehouse_product_histories')->insert($movementRows);
         });
