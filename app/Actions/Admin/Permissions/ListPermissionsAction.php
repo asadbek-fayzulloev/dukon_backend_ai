@@ -3,7 +3,7 @@
 namespace App\Actions\Admin\Permissions;
 
 
-use App\Dtos\Auth\PermissionDTO;
+use App\Dtos\Admin\Auth\PermissionDTO;
 use Spatie\Permission\Models\Permission;
 
 class ListPermissionsAction

@@ -3,7 +3,7 @@
 namespace App\Actions\Mobile\Permissions;
 
 
-use App\Dtos\Auth\PermissionDTO;
+use App\Dtos\Mobile\Auth\PermissionDTO;
 use Spatie\Permission\Models\Permission;
 
 class ListPermissionsAction
