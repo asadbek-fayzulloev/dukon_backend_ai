@@ -29,4 +29,6 @@ Route::middleware(['auth:api'])->group(static function () {
     Route::module('shops');
     Route::module('admins');
     Route::module('companies');
+    Route::module('integrations');
+    Route::module('reports');
 });

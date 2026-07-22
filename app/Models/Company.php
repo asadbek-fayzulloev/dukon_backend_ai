@@ -25,4 +25,9 @@ class Company extends Model
     {
         return $this->hasMany(Admin::class);
     }
+
+    public function integrations(): HasMany
+    {
+        return $this->hasMany(CompanyIntegration::class);
+    }
 }
