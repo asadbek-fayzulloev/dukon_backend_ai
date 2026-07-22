@@ -3,7 +3,9 @@
 namespace App\Actions\Admin\Statistics;
 
 use App\Models\Debt;
+use App\Models\Order;
 use App\Models\OrderPayment;
+use App\Models\Product;
 use App\Models\WarehouseProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -23,6 +25,14 @@ class GetStatWidgetAction
         $debt_summ = Debt::query()->where('company_id', user()->company_id)->sum('remaining_amount');
         $all_neat_price = WarehouseProduct::query()->where('company_id', user()->company_id)->selectRaw('SUM(net_price * quantity) as total')->value('total');
         $all_sale_price = WarehouseProduct::query()->where('company_id', user()->company_id)->selectRaw('SUM(price * quantity) as totalp')->value('totalp');
+        $today_orders_count = Order::query()
+            ->where('company_id', user()->company_id)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
+        $low_stock_count = Product::query()
+            ->where('company_id', user()->company_id)
+            ->whereColumn('quantity', '<=', 'notify_limit')
+            ->count();
         return [
             'widgets' => [
                 [
@@ -40,6 +50,14 @@ class GetStatWidgetAction
                 [
                     'name' => 'Qarzdorlik',
                     'value' => number_format($debt_summ) . ' UZS',
+                ],
+                [
+                    'name' => 'Bugungi buyurtmalar',
+                    'value' => number_format($today_orders_count),
+                ],
+                [
+                    'name' => 'Kam qolgan mahsulotlar',
+                    'value' => number_format($low_stock_count),
                 ],
             ]
         ];

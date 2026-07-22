@@ -6,11 +6,13 @@ use App\Actions\Admin\Statistics\GetStatWidgetAction;
 use App\Actions\Admin\Statistics\PaymentStatAction;
 use App\Actions\Admin\Statistics\SalesStatAction;
 use App\Actions\Admin\Statistics\SellerStatAction;
+use App\Actions\Admin\Statistics\ShopSalesStatAction;
+use App\Actions\Admin\Statistics\TopProductsStatAction;
+use App\Actions\Admin\Statistics\WarehouseStockStatAction;
 use App\Dtos\Admin\Statistics\PaymentStatRequest;
 use App\Dtos\Admin\Statistics\SalesStatRequest;
 use App\Dtos\Admin\Statistics\SellerStatRequest;
 use App\Http\Controllers\ApiBaseController;
-use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
 class StatisticsController extends ApiBaseController
@@ -34,13 +36,19 @@ class StatisticsController extends ApiBaseController
     {
         return $action->handle(PaymentStatRequest::from($request));
     }
-    public function other(){
-        return [
-            'widgets' => [
-                'warehouses' => Warehouse::query()->withCount('products')->get()->pluck('name', 'productsCount')->toArray(),
-                'shops' => [],
 
-            ]
-        ];
+    public function shopSalesStat(Request $request, ShopSalesStatAction $action): array
+    {
+        return $action->handle(SalesStatRequest::from($request));
+    }
+
+    public function warehouseStockStat(WarehouseStockStatAction $action): array
+    {
+        return $action->handle();
+    }
+
+    public function topProductsStat(Request $request, TopProductsStatAction $action): array
+    {
+        return $action->handle(SalesStatRequest::from($request));
     }
 }
