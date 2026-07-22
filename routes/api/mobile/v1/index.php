@@ -17,6 +17,7 @@ Route::middleware(['auth:api'])->group(static function () {
     Route::module('statistics');
     Route::module('debts');
     Route::module('permissions');
+    Route::module('roles');
     Route::module('products');
     Route::module('product-categories');
     Route::module('users');
