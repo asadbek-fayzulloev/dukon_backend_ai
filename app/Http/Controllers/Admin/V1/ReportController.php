@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Actions\Admin\Reports\BalanceReportAction;
+use App\Actions\Admin\Reports\BalanceReportExportAction;
 use App\Actions\Admin\Reports\ProfitLossReportAction;
 use App\Actions\Admin\Reports\SalesReportAction;
 use App\Actions\Admin\Reports\StockReportAction;
@@ -10,6 +11,7 @@ use App\Dtos\Admin\Reports\BalanceReportRequest;
 use App\Dtos\Admin\Reports\ReportDateRangeRequest;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ReportController extends ApiBaseController
 {
@@ -29,6 +31,11 @@ class ReportController extends ApiBaseController
     }
 
     public function balance(Request $request, BalanceReportAction $action): array
+    {
+        return $action->handle(BalanceReportRequest::from($request));
+    }
+
+    public function balanceExport(Request $request, BalanceReportExportAction $action): BinaryFileResponse
     {
         return $action->handle(BalanceReportRequest::from($request));
     }

@@ -7,3 +7,4 @@ Route::get('sales', [ReportController::class, 'sales']);
 Route::get('profit-loss', [ReportController::class, 'profitLoss']);
 Route::get('stock', [ReportController::class, 'stock']);
 Route::get('balance', [ReportController::class, 'balance']);
+Route::get('balance/export', [ReportController::class, 'balanceExport']);
