@@ -4,6 +4,7 @@ namespace App\Actions\Admin\Admins;
 
 use App\Dtos\Admin\Admins\SaveAdminRequest;
 use App\Models\Admin;
+use Spatie\Permission\Models\Role;
 
 class SaveAdminAction
 {
@@ -15,6 +16,11 @@ class SaveAdminAction
         $admin->password = $request->password; // hashed automatically via the model's cast
         $admin->shop_id = $request->shop_id;
         $admin->save();
+
+        // Pass a Role instance (not a raw id) so Spatie skips its default-guard-scoped
+        // lookup and only checks that 'api' is one of Admin's possible guards, which it is.
+        $role = $request->role_id ? Role::find($request->role_id) : null;
+        $admin->syncRoles($role ? [$role] : []);
 
         return __('admins.stored');
     }

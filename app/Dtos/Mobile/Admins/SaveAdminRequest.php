@@ -22,4 +22,7 @@ class SaveAdminRequest extends Data
 
     #[Exists('shops', 'id')]
     public ?int $shop_id;
+
+    #[Exists('roles', 'id')]
+    public ?int $role_id;
 }

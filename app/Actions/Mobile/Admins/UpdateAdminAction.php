@@ -4,6 +4,7 @@ namespace App\Actions\Mobile\Admins;
 
 use App\Dtos\Mobile\Admins\UpdateAdminRequest;
 use App\Models\Admin;
+use Spatie\Permission\Models\Role;
 
 class UpdateAdminAction
 {
@@ -21,6 +22,9 @@ class UpdateAdminAction
         }
 
         $admin->save();
+
+        $role = $request->role_id ? Role::find($request->role_id) : null;
+        $admin->syncRoles($role ? [$role] : []);
 
         return __('admins.updated');
     }
