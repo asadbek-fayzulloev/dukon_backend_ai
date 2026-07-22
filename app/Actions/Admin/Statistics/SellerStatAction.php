@@ -16,6 +16,7 @@ class SellerStatAction
 
         return [
             'seller_stats' => Order::with('seller:id,name')
+                ->where('company_id', user()->company_id)
                 ->whereBetween('created_at', [$fromDate, $toDate])
                 ->get()
                 ->groupBy('seller_id')

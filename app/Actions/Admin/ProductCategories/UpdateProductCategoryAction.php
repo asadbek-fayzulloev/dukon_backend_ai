@@ -9,7 +9,7 @@ class UpdateProductCategoryAction
 {
     public function handle(int $id, UpdateProductCategoryRequest $request): string
     {
-        $productCategory = ProductCategory::query()->find($id);
+        $productCategory = ProductCategory::query()->where('company_id', user()->company_id)->find($id);
         error_if($productCategory === null, __('product_categories.not_found'));
         $productCategory->name = $request->name ?? $productCategory->name;
         $productCategory->save();

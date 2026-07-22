@@ -11,7 +11,11 @@ class ImportProductAction
 {
     public function handle(ImportProductRequest $request): string
     {
-        $warehouseId = DB::table('warehouses')->orderBy('id')->value('id');
+        $warehouseId = DB::table('warehouses')
+            ->where('company_id', user()->company_id)
+            ->when(user()->shop_id, fn ($query) => $query->where('shop_id', user()->shop_id))
+            ->orderBy('id')
+            ->value('id');
 
         if (!$warehouseId) {
             throw new \Exception('No warehouse found');
@@ -56,6 +60,7 @@ class ImportProductAction
                     'price'        => $p->price,
                     'created_at'   => now(),
                     'updated_at'   => now(),
+                    'company_id'   => user()->company_id,
                 ], $toInsert);
 
                 DB::table('warehouse_products')->insert($insertData);
@@ -96,6 +101,7 @@ class ImportProductAction
                 'warehouse_id' => $warehouseId,
                 'admin_id' => optional(user())->id,
                 'total_amount' => $totalAmount,
+                'company_id' => user()->company_id,
             ]);
 
             $movementRows = array_map(fn($p) => [
@@ -109,6 +115,7 @@ class ImportProductAction
                 'price'        => $p->price,
                 'created_at'   => now(),
                 'updated_at'   => now(),
+                'company_id'   => user()->company_id,
             ], $productsArray);
 
             DB::table('warehouse_product_histories')->insert($movementRows);

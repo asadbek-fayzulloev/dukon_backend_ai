@@ -24,6 +24,7 @@ class Order extends Model
         'uuid', 'user_id', 'seller_id', 'shop_id', 'warehouse_id', 'device_id',
         'subtotal', 'discount_type', 'discount_value', 'discount_amount', 'discount',
         'order_total_price', 'order_total_paid', 'debt_amount', 'status', 'sold_at', 'synced_at',
+        'company_id',
     ];
 
     protected $casts = [
@@ -65,6 +66,11 @@ class Order extends Model
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
 }

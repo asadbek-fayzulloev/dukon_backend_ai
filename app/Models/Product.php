@@ -18,7 +18,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'image', 'unit_id', 'notify_limit','category_id','code'];
+    protected $fillable = ['name', 'image', 'unit_id', 'notify_limit','category_id','code', 'company_id'];
     protected $casts = [
         'quantity' => 'float'
     ];
@@ -31,5 +31,10 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 }

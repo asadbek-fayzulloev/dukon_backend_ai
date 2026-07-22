@@ -16,6 +16,7 @@ class PaymentStatAction
         $toDate = $request->to_date ? Carbon::parse($request->to_date)->endOfDay() : Carbon::now();
 
         $totals = OrderPayment::query()
+            ->whereHas('order', fn ($query) => $query->where('company_id', user()->company_id))
             ->whereBetween('created_at', [$fromDate, $toDate])
             ->select('payment_type', DB::raw('SUM(payed_price) as total'))
             ->groupBy('payment_type')

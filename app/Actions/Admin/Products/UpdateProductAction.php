@@ -9,7 +9,7 @@ class UpdateProductAction
 {
     public function handle(int $id, UpdateProductRequest $request): string
     {
-        $product = Product::query()->find($id);
+        $product = Product::query()->where('company_id', user()->company_id)->find($id);
         error_if($product === null, __('products.not-found'));
         $product->name = $request->name ?? $product->name;
         $product->net_price = $request->net_price ?? $product->net_price;

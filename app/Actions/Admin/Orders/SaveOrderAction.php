@@ -114,6 +114,7 @@ class SaveOrderAction
                 'user_id' => $customer?->id,
                 'seller_id' => $seller->id,
                 'shop_id' => $seller->shop_id,
+                'company_id' => $seller->company_id,
                 'warehouse_id' => $warehouse->id,
                 'device_id' => $request->device_id,
                 'subtotal' => $subtotal,
@@ -145,6 +146,7 @@ class SaveOrderAction
                     'order_id' => $order->id,
                     'status' => DebtStatus::OPEN->value,
                     'is_notified' => false,
+                    'company_id' => $seller->company_id,
                 ]);
             }
 

@@ -15,6 +15,7 @@ class SalesStatAction
         $toDate = $request->to_date ? Carbon::parse($request->to_date)->endOfDay() : Carbon::now();
 
         $sales = Order::query()
+            ->where('company_id', user()->company_id)
             ->whereBetween('created_at', [$fromDate, $toDate])
             ->select(
                 DB::raw('DATE(created_at) as date'),

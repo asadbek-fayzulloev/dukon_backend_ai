@@ -10,7 +10,7 @@ class FetchProductCategoriesAction
 {
     public function handle(Request $request): array
     {
-        $products = ProductCategory::query()->orderByDesc('created_at')->get();
+        $products = ProductCategory::query()->where('company_id', user()->company_id)->orderByDesc('created_at')->get();
         return [
             'product_categories' => FetchProductCategoriesDTO::collect($products)->toArray()
         ];

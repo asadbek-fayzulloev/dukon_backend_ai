@@ -12,7 +12,7 @@ class FetchProductsAction
 {
     public function handle(FetchProductRequest $request): array
     {
-        $query = Product::query()->orderByDesc('created_at');
+        $query = Product::query()->where('company_id', user()->company_id)->orderByDesc('created_at');
         $query = (new ProductFilter($query))->apply();
 
         $paginator = $query->paginate(perPage: $request->per_page, page: $request->page);

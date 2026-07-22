@@ -14,7 +14,7 @@ class Admin extends Authenticatable implements FilamentUser
 {
     use HasRoles, HasApiTokens, HasFactory;
 
-    protected $fillable = ['name', 'email', 'password', 'shop_id'];
+    protected $fillable = ['name', 'email', 'password', 'shop_id', 'company_id'];
 
     public function canAccessPanel(Panel $panel): bool
     {
@@ -24,6 +24,11 @@ class Admin extends Authenticatable implements FilamentUser
     public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     protected function casts(): array

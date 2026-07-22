@@ -19,6 +19,7 @@ class WarehouseProductHistory extends Model
         'quantity',
         'price',
         'net_price',
+        'company_id',
     ];
 
     public function invoice(): BelongsTo
@@ -39,5 +40,10 @@ class WarehouseProductHistory extends Model
     public function admin(): BelongsTo
     {
         return $this->belongsTo(Admin::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 }

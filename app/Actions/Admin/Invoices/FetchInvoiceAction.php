@@ -10,7 +10,8 @@ class FetchInvoiceAction
     public function handle(int $id): array
     {
         $invoice = Invoice::query()
-            ->whereHas('warehouse', fn ($query) => $query->where('shop_id', user()->shop_id))
+            ->where('company_id', user()->company_id)
+            ->when(user()->shop_id, fn ($query, $shopId) => $query->whereHas('warehouse', fn ($query) => $query->where('shop_id', $shopId)))
             ->with(['warehouse', 'admin', 'histories.product'])
             ->find($id);
 

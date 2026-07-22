@@ -12,6 +12,7 @@ class ListProductsAction
     public function handle(Request $request): array
     {
         $query = Product::query()
+            ->where('company_id', user()->company_id)
             ->with(['unit'])
             ->orderByDesc('created_at')
             ->limit(10);

@@ -9,7 +9,7 @@ class FetchWarehousesAction
 {
     public function handle():array
     {
-        $warehouses = Warehouse::query()->get();
+        $warehouses = Warehouse::query()->where('company_id', user()->company_id)->get();
 
         return [
             'warehouses' => FetchWarehousesDTO::collect($warehouses)->toArray()

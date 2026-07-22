@@ -10,7 +10,7 @@ class AddWarehouseProductAction
 {
     public function handle(int $warehouseId, AddWarehouseProductRequest $request):string
     {
-        $warehouse = Warehouse::query()->find($warehouseId);
+        $warehouse = Warehouse::query()->where('company_id', user()->company_id)->find($warehouseId);
         error_if($warehouse === null, __('warehouses.not_found'));
         $warehouseProduct = WarehouseProduct::query()
             ->where('warehouse_id', $warehouse->id)
@@ -25,6 +25,7 @@ class AddWarehouseProductAction
             $warehouseProduct->price =$request->price;
             $warehouseProduct->net_price = $request->net_price;
             $warehouseProduct->amount = $request->amount;
+            $warehouseProduct->company_id = user()->company_id;
         } else {
             $warehouseProduct->amount = $warehouseProduct->amount + $request->amount;
         }

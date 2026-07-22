@@ -7,7 +7,7 @@ use App\Models\Unit;
 class UpdateUnitAction 
 {
     public function handle(int $id, UpdateUnitRequest $request){
-        $unit = Unit::find($id);
+        $unit = Unit::where('company_id', user()->company_id)->find($id);
         error_if($unit === null, __('units.not_found'));
         $unit->name = $request->name;
         $unit->save();

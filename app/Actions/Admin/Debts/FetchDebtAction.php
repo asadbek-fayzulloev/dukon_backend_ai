@@ -14,7 +14,8 @@ class FetchDebtAction
     {
         $query = Debt::query()
             ->whereHas('user')
-            ->whereHas('order', fn ($query) => $query->where('shop_id', user()->shop_id))
+            ->where('company_id', user()->company_id)
+            ->when(user()->shop_id, fn ($query, $shopId) => $query->whereHas('order', fn ($query) => $query->where('shop_id', $shopId)))
             ->with(['user', 'order'])
             ->orderByDesc('created_at');
         $query = (new DebtsFilter($query))->apply();

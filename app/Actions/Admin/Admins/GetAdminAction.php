@@ -9,7 +9,7 @@ class GetAdminAction
 {
     public function handle(int $id): array
     {
-        $admin = Admin::query()->find($id);
+        $admin = Admin::query()->where('company_id', user()->company_id)->find($id);
         error_if($admin === null, __('admins.not_found'));
 
         return [

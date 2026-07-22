@@ -9,7 +9,7 @@ class FetchUnitAction
 {
     public function handle(): array
     {
-        $units = Unit::query()->get();
+        $units = Unit::query()->where('company_id', user()->company_id)->get();
         return [
             'units' => FetchUnitsDTO::collect($units)
         ];

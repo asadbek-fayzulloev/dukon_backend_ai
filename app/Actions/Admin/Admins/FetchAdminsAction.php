@@ -12,7 +12,7 @@ class FetchAdminsAction
 {
     public function handle(Request $request): array
     {
-        $query = Admin::query()->orderByDesc('created_at');
+        $query = Admin::query()->where('company_id', user()->company_id)->orderByDesc('created_at');
         $query = (new AdminsFilter($query))->apply();
 
         $paginator = $query->paginate(perPage: $request->per_page, page: $request->page);

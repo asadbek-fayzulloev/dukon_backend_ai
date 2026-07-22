@@ -9,7 +9,7 @@ class FetchShopsAction
 {
     public function handle(): array
     {
-        $shops = Shop::query()->orderByDesc('created_at')->get();
+        $shops = Shop::query()->where('company_id', user()->company_id)->orderByDesc('created_at')->get();
 
         return [
             'shops' => FetchShopDTO::collect($shops),

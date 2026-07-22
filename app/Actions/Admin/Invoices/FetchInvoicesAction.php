@@ -12,7 +12,8 @@ class FetchInvoicesAction
     public function handle(Request $request): array
     {
         $query = Invoice::query()
-            ->whereHas('warehouse', fn ($query) => $query->where('shop_id', user()->shop_id))
+            ->where('company_id', user()->company_id)
+            ->when(user()->shop_id, fn ($query, $shopId) => $query->whereHas('warehouse', fn ($query) => $query->where('shop_id', $shopId)))
             ->withCount('histories')
             ->with(['warehouse', 'admin'])
             ->when($request->type, fn ($query, $type) => $query->where('type', $type))

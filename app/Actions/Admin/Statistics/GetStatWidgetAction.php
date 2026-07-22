@@ -14,14 +14,15 @@ class GetStatWidgetAction
         $fromDate = $request->from_date ? Carbon::parse($request->from_date)->startOfDay() : null;
         $toDate = $request->to_date ? Carbon::parse($request->to_date)->endOfDay() : null;
 
-        $orderPaymentsQuery = OrderPayment::query();
+        $orderPaymentsQuery = OrderPayment::query()
+            ->whereHas('order', fn ($query) => $query->where('company_id', user()->company_id));
         if($fromDate && $toDate){
             $orderPaymentsQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
         $money_in_kassa = $orderPaymentsQuery->sum('payed_price');
-        $debt_summ = Debt::query()->sum('remaining_amount');
-        $all_neat_price = WarehouseProduct::query()->selectRaw('SUM(net_price * quantity) as total')->value('total');
-        $all_sale_price = WarehouseProduct::query()->selectRaw('SUM(price * quantity) as totalp')->value('totalp');
+        $debt_summ = Debt::query()->where('company_id', user()->company_id)->sum('remaining_amount');
+        $all_neat_price = WarehouseProduct::query()->where('company_id', user()->company_id)->selectRaw('SUM(net_price * quantity) as total')->value('total');
+        $all_sale_price = WarehouseProduct::query()->where('company_id', user()->company_id)->selectRaw('SUM(price * quantity) as totalp')->value('totalp');
         return [
             'widgets' => [
                 [

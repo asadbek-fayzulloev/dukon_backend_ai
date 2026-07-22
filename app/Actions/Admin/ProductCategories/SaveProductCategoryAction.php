@@ -11,6 +11,7 @@ class SaveProductCategoryAction
     {
         $productCategory = new ProductCategory();
         $productCategory->name = $request->name;
+        $productCategory->company_id = user()->company_id;
         $productCategory->save();
         return __('product_categories.stored');
     }

@@ -13,6 +13,7 @@ class FetchWarehouseProductsAction
         $query = WarehouseProduct::query()
             ->where('warehouse_id', $warehouseId)
             ->where('quantity', '>', 0)
+            ->where('company_id', user()->company_id)
             ->whereHas('warehouse', fn ($query) => $query->where('shop_id', user()->shop_id))
             ->with(['product.unit'])
             ->selectRaw('product_id, warehouse_id, SUM(quantity) AS quantity, MAX(price) AS price')

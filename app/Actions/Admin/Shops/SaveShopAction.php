@@ -11,6 +11,7 @@ class SaveShopAction
     {
         $shop = new Shop();
         $shop->name = $request->name;
+        $shop->company_id = user()->company_id;
         $shop->save();
 
         return __('shops.stored');

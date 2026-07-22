@@ -19,7 +19,8 @@ class FetchProductMovementsAction
     {
         $histories = WarehouseProductHistory::query()
             ->where('product_id', $request->product_id)
-            ->whereHas('warehouse', fn ($query) => $query->where('shop_id', user()->shop_id))
+            ->where('company_id', user()->company_id)
+            ->when(user()->shop_id, fn ($query, $shopId) => $query->whereHas('warehouse', fn ($query) => $query->where('shop_id', $shopId)))
             ->when($request->warehouse_id, fn ($query, $warehouseId) => $query->where('warehouse_id', $warehouseId))
             ->with('admin')
             ->get()
@@ -37,7 +38,10 @@ class FetchProductMovementsAction
         $sales = OrderItem::query()
             ->where('product_id', $request->product_id)
             ->whereHas('order', function ($query) use ($request) {
-                $query->where('shop_id', user()->shop_id);
+                $query->where('company_id', user()->company_id);
+                if (user()->shop_id) {
+                    $query->where('shop_id', user()->shop_id);
+                }
                 if ($request->warehouse_id) {
                     $query->where('warehouse_id', $request->warehouse_id);
                 }

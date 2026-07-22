@@ -15,6 +15,7 @@ class SaveAdminAction
         $admin->email = $request->email;
         $admin->password = $request->password; // hashed automatically via the model's cast
         $admin->shop_id = $request->shop_id;
+        $admin->company_id = user()->company_id;
         $admin->save();
 
         // Pass a Role instance (not a raw id) so Spatie skips its default-guard-scoped

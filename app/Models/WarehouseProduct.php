@@ -10,7 +10,7 @@ class WarehouseProduct extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['warehouse_id', 'product_id', 'quantity', 'price', 'net_price'];
+    protected $fillable = ['warehouse_id', 'product_id', 'quantity', 'price', 'net_price', 'company_id'];
 
     protected $casts = ['quantity' => 'decimal:3'];
 
@@ -22,5 +22,10 @@ class WarehouseProduct extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 }

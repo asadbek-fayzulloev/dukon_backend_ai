@@ -10,7 +10,8 @@ class GetOrderAction
     public function handle(int $id): array
     {
         $order = Order::query()
-            ->where('shop_id', user()->shop_id)
+            ->where('company_id', user()->company_id)
+            ->when(user()->shop_id, fn ($query, $shopId) => $query->where('shop_id', $shopId))
             ->with(['items.product', 'payments', 'debt'])
             ->find($id);
         error_if($order === null, __('orders.not-found'));

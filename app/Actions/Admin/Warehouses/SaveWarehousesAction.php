@@ -12,6 +12,7 @@ class SaveWarehousesAction
         $warehouse = new Warehouse();
         $warehouse->name = $request->name;
         $warehouse->shop_id = $request->shop_id;
+        $warehouse->company_id = user()->company_id;
         $warehouse->save();
         return __('warehouses.saved');
     }

@@ -20,7 +20,7 @@ class Debt extends Model
     use HasFactory;
     protected $fillable = [
         'amount', 'remaining_amount', 'return_date', 'paid_at', 'status',
-        'order_id', 'is_notified', 'user_id',
+        'order_id', 'is_notified', 'user_id', 'company_id',
     ];
     protected $casts = [
         'return_date' => 'datetime',
@@ -41,5 +41,10 @@ class Debt extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(DebtPayment::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 }

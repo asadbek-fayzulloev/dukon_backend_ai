@@ -7,7 +7,7 @@ class DestroyUnitAction
 {
     public function handle(int $id) : string
     {
-        $unit = Unit::find($id);
+        $unit = Unit::where('company_id', user()->company_id)->find($id);
         error_if($unit === null, __('units.not_found'));
         $unit->delete();
         return __('units.deleted');

@@ -9,6 +9,7 @@ class SaveUnitAction {
     public function handle(SaveUnitRequest $request) : string {
         $unit = new Unit();
         $unit->name = $request->name;
+        $unit->company_id = user()->company_id;
         $unit->save();
         return __('units.store');
     }

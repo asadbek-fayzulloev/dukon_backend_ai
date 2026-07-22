@@ -13,9 +13,14 @@ class Unit extends Model
     use SoftDeletes;
 
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'company_id'];
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'unit_id');
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 }

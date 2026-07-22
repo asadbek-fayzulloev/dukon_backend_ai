@@ -20,6 +20,7 @@ class Invoice extends Model
         'admin_id',
         'total_amount',
         'note',
+        'company_id',
     ];
 
     public function warehouse(): BelongsTo
@@ -45,5 +46,10 @@ class Invoice extends Model
     public function histories(): HasMany
     {
         return $this->hasMany(WarehouseProductHistory::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 }

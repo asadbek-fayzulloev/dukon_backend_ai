@@ -13,7 +13,8 @@ class ListWarehouseProductsAction
     {
         $query = WarehouseProduct::query()
             ->where('quantity', '>', 0)
-            ->whereHas('warehouse', fn ($query) => $query->where('shop_id', user()->shop_id))
+            ->where('company_id', user()->company_id)
+            ->when(user()->shop_id, fn ($query, $shopId) => $query->whereHas('warehouse', fn ($query) => $query->where('shop_id', $shopId)))
             ->when($request->warehouse_id, fn ($query, $warehouseId) => $query->where('warehouse_id', $warehouseId))
             ->with(['product.unit']);
 

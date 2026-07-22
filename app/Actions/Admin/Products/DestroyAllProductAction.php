@@ -9,7 +9,7 @@ class DestroyAllProductAction
 {
     public function handle(DestroyAllRequest $request): string
     {
-        $product = Product::query()->whereIn('id', $request->ids)->delete();
+        $product = Product::query()->where('company_id', user()->company_id)->whereIn('id', $request->ids)->delete();
         return __('products.deleted');
     }
 }

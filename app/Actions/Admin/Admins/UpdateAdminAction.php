@@ -10,7 +10,7 @@ class UpdateAdminAction
 {
     public function handle(int $id, UpdateAdminRequest $request): string
     {
-        $admin = Admin::find($id);
+        $admin = Admin::where('company_id', user()->company_id)->find($id);
         error_if($admin === null, __('admins.not_found'));
 
         $admin->name = $request->name;

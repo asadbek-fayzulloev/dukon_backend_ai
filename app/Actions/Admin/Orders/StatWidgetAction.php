@@ -12,8 +12,8 @@ class StatWidgetAction
     {
         $fromDate = $request->from_date ? Carbon::parse($request->from_date)->startOfDay() : null;
         $toDate = $request->to_date ? Carbon::parse($request->to_date)->endOfDay() : null;
-        $orderQuery = Order::query();
-        
+        $orderQuery = Order::query()->where('company_id', user()->company_id);
+
         if($fromDate && $toDate){
             $orderQuery = $orderQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }

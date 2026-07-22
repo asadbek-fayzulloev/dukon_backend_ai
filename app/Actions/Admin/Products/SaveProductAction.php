@@ -17,6 +17,7 @@ class SaveProductAction
         $product->quantity = $request->quantity;
         $product->notify_limit = $request->notify_limit;
         $product->category_id = $request->category_id;
+        $product->company_id = user()->company_id;
         $product->save();
         return __('products.saved');
     }

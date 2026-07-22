@@ -10,6 +10,7 @@ class GetDebtAction
     public function handle(int $id): array
     {
         $debt = Debt::query()
+            ->where('company_id', user()->company_id)
             ->with(['user', 'order', 'payments'])
             ->find($id);
         error_if($debt === null, __('debts.not_found'));

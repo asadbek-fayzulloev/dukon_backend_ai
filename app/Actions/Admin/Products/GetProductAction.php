@@ -9,7 +9,7 @@ class GetProductAction
 {
     public function handle($id): array
     {
-        $product = Product::query()->find($id);
+        $product = Product::query()->where('company_id', user()->company_id)->find($id);
         error_if($product === null, __('products.not-found'));
         return [
             'product' => GetProductDTO::from($product)->toArray()
