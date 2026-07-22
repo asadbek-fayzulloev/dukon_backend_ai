@@ -9,6 +9,8 @@ class FetchUsersDTO extends Data
     public int $id;
     public ?string $name;
     public string $phone;
+    public ?float $total_sales;
+    public ?float $total_debt;
 
     public function toArray(): array
     {
@@ -16,6 +18,8 @@ class FetchUsersDTO extends Data
             'id' => $this->id,
             'name' => $this->name ?? '',
             'phone' => $this->phone,
+            'total_sales' => (float) ($this->total_sales ?? 0),
+            'total_debt' => (float) ($this->total_debt ?? 0),
         ];
 
     }

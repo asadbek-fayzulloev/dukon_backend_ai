@@ -14,7 +14,10 @@ class FetchUsersAction
 {
     public function handle(Request $request): array
     {
-        $query = User::query()->orderByDesc('created_at');
+        $query = User::query()
+            ->withSum('orders as total_sales', 'order_total_price')
+            ->withSum('debts as total_debt', 'remaining_amount')
+            ->orderByDesc('created_at');
         $query = (new UsersFilter($query))->apply();
 
         $paginator = $query->paginate(perPage: $request->per_page, page: $request->page);
