@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Actions\Mobile\Orders;
+
+use App\Dtos\Mobile\Orders\FetchOrderRequest;
+use App\Dtos\Mobile\Orders\FetchOrdersDTO;
+use App\Dtos\PaginationDTO;
+use App\Filters\OrderFilter;
+use App\Models\Order;
+
+class FetchOrdersAction
+{
+    public function handle(FetchOrderRequest $request): array
+    {
+        $query = Order::query()
+                    ->where('shop_id', user()->shop_id)
+                    ->with(['user', 'seller'])
+                    ->orderByDesc('created_at');
+        $query = (new OrderFilter($query))->apply();
+        $paginator = $query->paginate(perPage: $request->per_page, page: $request->page);
+        $orders = array_map(
+            fn($order) => FetchOrdersDTO::from($order)->toArray(),
+            $paginator->items()
+        );
+        return [
+            'orders' => $orders,
+            'paginator' => new PaginationDTO($paginator),
+            'now' => now()
+        ];
+    }
+}
