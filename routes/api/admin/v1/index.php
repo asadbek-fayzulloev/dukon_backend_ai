@@ -24,6 +24,7 @@ Route::middleware(['auth:api'])->group(static function () {
     Route::module('units');
     Route::module('warehouses');
     Route::module('warehouse-products');
+    Route::module('invoices');
     Route::module('static-data');
     Route::module('shops');
     Route::module('admins');

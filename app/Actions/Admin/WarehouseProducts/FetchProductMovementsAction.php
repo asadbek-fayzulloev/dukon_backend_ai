@@ -31,6 +31,7 @@ class FetchProductMovementsAction
                 'net_price' => (float) $row->net_price,
                 'by' => $row->admin?->name,
                 'order_id' => null,
+                'invoice_id' => $row->invoice_id,
             ]);
 
         $sales = OrderItem::query()
@@ -51,6 +52,7 @@ class FetchProductMovementsAction
                 'net_price' => (float) $row->net_price,
                 'by' => $row->order?->seller?->name,
                 'order_id' => $row->order_id,
+                'invoice_id' => null,
             ]);
 
         $movements = $histories->concat($sales)
