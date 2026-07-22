@@ -3,6 +3,8 @@
 namespace App\Actions\Admin\WarehouseProducts;
 
 use App\Dtos\Admin\WarehouseProducts\Import\ImportProductRequest;
+use App\Enums\MovementType;
+use App\Models\Invoice;
 use Illuminate\Support\Facades\DB;
 
 class ImportProductAction
@@ -82,12 +84,24 @@ class ImportProductAction
                 ", $bindings);
             }
 
-            // Har bir kirim qatori uchun tarixiy yozuv — warehouse_products faqat
-            // joriy yig'indini saqlaydi, "kirim tarixi" shu jadval orqali ko'rsatiladi.
+            // Har bir kirim uchun bitta nakladnoy (invoice) va uning ortidan
+            // qator-baqator tarixiy yozuvlar — warehouse_products faqat joriy
+            // yig'indini saqlaydi, "kirim tarixi" shu jadval orqali ko'rsatiladi.
+            $totalAmount = array_sum(array_map(fn($p) => $p->quantity * $p->price, $request->products));
+
+            $invoice = Invoice::create([
+                'type' => MovementType::BUY->value,
+                'warehouse_id' => $warehouseId,
+                'admin_id' => optional(user())->id,
+                'total_amount' => $totalAmount,
+            ]);
+
             $movementRows = array_map(fn($p) => [
+                'invoice_id'   => $invoice->id,
                 'product_id'   => $p->id,
                 'warehouse_id' => $warehouseId,
                 'admin_id'     => optional(user())->id,
+                'type'         => MovementType::BUY->value,
                 'quantity'     => $p->quantity,
                 'net_price'    => $p->net_price,
                 'price'        => $p->price,
@@ -95,7 +109,7 @@ class ImportProductAction
                 'updated_at'   => now(),
             ], $request->products);
 
-            DB::table('warehouse_product_imports')->insert($movementRows);
+            DB::table('warehouse_product_histories')->insert($movementRows);
         });
 
         return __('products.imported');

@@ -6,13 +6,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class WarehouseProductImport extends Model
+class WarehouseProductHistory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'warehouse_id', 'admin_id', 'quantity', 'net_price', 'price'];
+    protected $fillable = [
+        'invoice_id',
+        'product_id',
+        'warehouse_id',
+        'admin_id',
+        'type',
+        'quantity',
+        'price',
+        'net_price',
+    ];
 
-    protected $casts = ['quantity' => 'float'];
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(Invoice::class);
+    }
 
     public function product(): BelongsTo
     {

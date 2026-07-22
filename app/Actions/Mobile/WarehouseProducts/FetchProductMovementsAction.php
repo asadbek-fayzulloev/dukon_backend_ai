@@ -4,27 +4,27 @@ namespace App\Actions\Mobile\WarehouseProducts;
 
 use App\Dtos\Mobile\WarehouseProducts\FetchProductMovementsRequest;
 use App\Models\OrderItem;
-use App\Models\WarehouseProductImport;
+use App\Models\WarehouseProductHistory;
 
 class FetchProductMovementsAction
 {
     /**
      * Merges two independent sources into one chronological ledger:
-     * stock-in from warehouse_product_imports (see ImportProductAction) and
-     * stock-out from order_items (already written by SaveOrderAction, which
+     * buy/transfer from warehouse_product_histories (see ImportProductAction)
+     * and sold from order_items (already written by SaveOrderAction, which
      * this deliberately does not touch — no new stock-out log, just reads
      * the checkout path's existing records).
      */
     public function handle(FetchProductMovementsRequest $request): array
     {
-        $imports = WarehouseProductImport::query()
+        $histories = WarehouseProductHistory::query()
             ->where('product_id', $request->product_id)
             ->whereHas('warehouse', fn ($query) => $query->where('shop_id', user()->shop_id))
             ->when($request->warehouse_id, fn ($query, $warehouseId) => $query->where('warehouse_id', $warehouseId))
             ->with('admin')
             ->get()
             ->map(fn ($row) => [
-                'type' => 'in',
+                'type' => $row->type,
                 'date' => $row->created_at?->toIso8601String(),
                 'quantity' => (float) $row->quantity,
                 'price' => (float) $row->price,
@@ -44,7 +44,7 @@ class FetchProductMovementsAction
             ->with('order.seller')
             ->get()
             ->map(fn ($row) => [
-                'type' => 'out',
+                'type' => 'sold',
                 'date' => $row->created_at?->toIso8601String(),
                 'quantity' => (float) $row->quantity,
                 'price' => (float) $row->product_price,
@@ -53,7 +53,7 @@ class FetchProductMovementsAction
                 'order_id' => $row->order_id,
             ]);
 
-        $movements = $imports->concat($sales)
+        $movements = $histories->concat($sales)
             ->sortByDesc('date')
             ->values();
 
